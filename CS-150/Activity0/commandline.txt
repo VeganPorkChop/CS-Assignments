@@ -1,0 +1,6 @@
+PS C:\Users\graha\CS-150-assignments\activity0>
+first.txt commandline.txt
+mkdir myfolder
+cd myfolder
+mv notes.txt myfolder/
+rm notes.txt
