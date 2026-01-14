@@ -1,6 +1,6 @@
-print("Hello, and welcome to the DNA allignment program!")
+print("Hello and welcome to DNA sequence alignment program!")
 while True:
-    data = input("Please select an option below: \n'u' to update the DNA string \n's' to score allignment\n'q' to quit the program \n")
+    data = input("Select one of the following commands:\n'u' to update sequences\n's' to score the alignment\n'q' to quit\n")
     if data == 'q':
-        print("Thank you for using the DNA allignment program, goodbye!")
+        print("Thank you! Goodbye!")
         break

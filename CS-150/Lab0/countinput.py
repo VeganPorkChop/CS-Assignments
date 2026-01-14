@@ -1,5 +1,5 @@
 # recieving string input from user
-input_str = str(input("Enter a string whose characters you want to count: "))
+input_str = input()
 
 total_chars = 0
 
@@ -9,4 +9,4 @@ for char in input_str:
         total_chars += 1
         
 # displaying the total character count
-print(f"Total characters (excluding spaces and punctuation): {total_chars}")
+print(total_chars)
