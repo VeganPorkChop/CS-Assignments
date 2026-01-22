@@ -34,7 +34,7 @@ def are_all_evens(lst):
     if lst == []:
         return False
     for num in lst:
-        if num%2 != 0 or num ==0:
+        if num%2 != 0 or num == 0:
             return False
     return True
 
@@ -175,7 +175,7 @@ def count_vowels(lst):
         for itteration in range(len(string)):
             char = string[itteration]
             print(char)
-            if char in ['a', 'e', 'i', 'o', 'u'] or (char is 'y' and itteration != 0):
+            if char in ['a', 'e', 'i', 'o', 'u'] or (char == 'y' and itteration != 0):
                 count += 1
             print(count)
             print(string.index(char))
