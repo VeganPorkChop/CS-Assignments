@@ -34,7 +34,7 @@ def are_all_evens(lst):
     if lst == []:
         return False
     for num in lst:
-        if num%2 != 0 or num == 0:
+        if num%2 != 0:
             return False
     return True
 

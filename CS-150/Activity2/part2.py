@@ -46,7 +46,7 @@ def test_ascending():
     assert True == ascending("abcdefghijklmnopqrstuvwxyz")
     assert False == ascending("babcdefghijklmnopqurstuvwxyz")
     assert True == ascending("acegikmoqstvxz")
-    assert False == ascending("Graham Gilbert-Schroeer is the best at coding in Python :)")
+    assert False == ascending("Graham Gilbert Schroeer is the best at coding in Python")
 
     """
     assert False == ascending("aaaaaaa")
