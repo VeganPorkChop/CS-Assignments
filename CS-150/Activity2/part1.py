@@ -13,8 +13,10 @@ def is_palindrome(s):
         bool: True if s is a palindrome and False otherwise
     """
 
-    # Implement me!
-    return False
+    for num in range(len(s)):
+        if s[num] != s[len(s) - 1 - num]:
+            return False
+    return True
 
 
 def test_is_palindrome():
@@ -37,9 +39,16 @@ def adjacent_duplicate(lst):
     Returns:
         int: the number of duplicates
     """
-
-    # Implement me!
-    return 0
+    count = 0
+    unique_num = None
+    for num in range(len(lst) -1):
+        if lst[num] == lst[num+1]:
+            if unique_num == lst[num]:
+                count +=1
+            else:
+                count +=2
+        unique_num = lst[num]
+    return count
 
 
 def test_adjacent_duplicate():
@@ -60,9 +69,12 @@ def average(lst):
     Returns:
         float: the average of these numbers
     """
-
-    # Implement me!
-    return 0
+    if not lst:
+        return 0
+    total = 0
+    for temp in lst:
+        total+=temp
+    return total/len(lst)
 
 
 def assertNearlyEqual(expected, actual):

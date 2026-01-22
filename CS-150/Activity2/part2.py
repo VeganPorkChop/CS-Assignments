@@ -16,7 +16,10 @@ def half_roundup(x):
 
 
 def test_half_roundup():
-    # Implement me!
+    assert -1 == half_roundup(-3)
+    assert 0 == half_roundup(0)
+    assert 5 == half_roundup(10)
+    assert 101 == half_roundup(201)
     pass
 
 
@@ -40,7 +43,22 @@ def ascending(s):
 
 
 def test_ascending():
-    # Implement me!
+    assert True == ascending("abcdefghijklmnopqrstuvwxyz")
+    assert False == ascending("babcdefghijklmnopqurstuvwxyz")
+    assert True == ascending("acegikmoqstvxz")
+    assert False == ascending("Graham Gilbert-Schroeer is the best at coding in Python 😎")
+
+    """
+    assert False == ascending("aaaaaaa")
+
+    This is perhaps an example of the program not working perfectly?
+    To fix this add this if right before the return True
+
+    if s[0] == s[len(s) - 1]:
+        print("This string doesnt move at all!! Therefore, it cant be increasing!")
+        return False
+    """
+    
     pass
 
 
@@ -72,7 +90,10 @@ def largest_digit(lst):
 
 
 def test_largest_digit():
-    # Implement me!
+    assert '789' == largest_digit(['123', '456', '789'])
+    assert '' == largest_digit([''])
+    assert '0123456789' == largest_digit(['0123456789', '999', '999', '999', '999999999999999'])
+    assert '34567' == largest_digit(['12345', '23456', '34567', '45555', '55555', '123450'])
     pass
 
 
