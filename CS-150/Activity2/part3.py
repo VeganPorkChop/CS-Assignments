@@ -31,8 +31,6 @@ def are_all_evens(lst):
     Returns:
         bool: True if all integers in the list are even and False otherwise
     """
-    if lst == []:
-        return False
     for num in lst:
         if num%2 != 0:
             return False
@@ -43,8 +41,8 @@ def test_are_all_evens():
     assert True == are_all_evens([2, 4, 6, 8, 88888888882])
     assert False == are_all_evens([2, 4, 6, 888888888881])
     assert True == are_all_evens([9999992, 1002, 202020202020])
-    assert False == are_all_evens([0])
-    assert False == are_all_evens([])
+    assert True == are_all_evens([0])
+    assert True == are_all_evens([])
     pass
 
 
@@ -174,11 +172,8 @@ def count_vowels(lst):
     for string in lst:
         for itteration in range(len(string)):
             char = string[itteration]
-            print(char)
             if char in ['a', 'e', 'i', 'o', 'u'] or (char == 'y' and itteration != 0):
                 count += 1
-            print(count)
-            print(string.index(char))
     return count
 
 def test_count_vowels():

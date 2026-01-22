@@ -44,20 +44,12 @@ def ascending(s):
 
 def test_ascending():
     assert True == ascending("abcdefghijklmnopqrstuvwxyz")
-    assert False == ascending("babcdefghijklmnopqurstuvwxyz")
+    assert False == ascending("babbbcdefghijklmnopqurstuvwxyz")
     assert True == ascending("acegikmoqstvxz")
-    assert False == ascending("Graham Gilbert Schroeer is the best at coding in Python")
+    assert False == ascending("zzzzzzyxw")
+    assert True == ascending("aaaaaa")
+    assert True == ascending("")
 
-    """
-    assert False == ascending("aaaaaaa")
-
-    This is perhaps an example of the program not working perfectly?
-    To fix this, add this if right before the return True
-
-    if s[0] == s[len(s) - 1]:
-        print("This string doesnt move at all!! Therefore, it cant be increasing!")
-        return False
-    """
     
     pass
 
