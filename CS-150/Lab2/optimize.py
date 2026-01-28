@@ -1,6 +1,6 @@
 """
-Author(s): YOUR NAME(S) HERE
-Creation Date: DATE YOU STARTED THE LAB
+Author(s): Graham Gilbert-Schroeer
+Creation Date: 1/26/26
 
 Initial creation by Dietrich Geisler on 10/12/2025
 Reviewed by Anastasia Kurdia on 1/22/2026
@@ -22,7 +22,7 @@ def dna_optimize(starting, insertion, target):
         #   then add the rest of the starting sequence
         attempt = starting[:index]
         attempt = attempt + insertion
-        attempt = starting[index:]
+        attempt = attempt + starting[index:]
 
         # If it's a perfect match, return this index!
         if attempt == target:

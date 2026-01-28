@@ -1,6 +1,6 @@
 """
-Author(s): YOUR NAME(S) HERE
-Creation Date: DATE YOU STARTED THE LAB
+Author(s): Graham Gilbert-Schroeer
+Creation Date: 1/26/26
 
 Initial creation by Dietrich Geisler on 10/12/2025
 Reviewed by Anastasia Kurdia on 1/22/2026
@@ -16,7 +16,7 @@ def evaluate(s):
     """
 
     result = 0
-    operation = ''      # keep track of which operation is next to apply
+    operation = '+'      # keep track of which operation is next to apply
     next_number = ''    # keep track of the next number to work with
 
     for char in s:
@@ -28,6 +28,8 @@ def evaluate(s):
             next_number = ''
         else:
             next_number = next_number + char
+            
+    result = apply_operation(result, operation, next_number)
 
     return result
 

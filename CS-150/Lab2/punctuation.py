@@ -1,6 +1,6 @@
 """
-Author(s): YOUR NAME(S) HERE
-Creation Date: DATE YOU STARTED THE LAB
+Author(s): Graham Gilbert-Schroeer
+Creation Date: 1/26/26
 
 Initial creation by Dietrich Geisler on 10/12/2025
 Reviewed by Anastasia Kurdia on 1/22/2026
@@ -18,7 +18,7 @@ def remove_punctuation(s):
     for char in s:
         # Check if our specific char is one of '.,?!'
         is_punctuation = char in '.,?!'
-        if is_punctuation:
+        if not is_punctuation:
             result = result + char
     return result
 
