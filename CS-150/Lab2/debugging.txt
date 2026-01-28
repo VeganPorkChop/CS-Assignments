@@ -1,0 +1,13 @@
+Graham Gilbert-Schroeer
+01/26/2026
+
+punctuation.py
+--> The if statement was only occuring when the character WAS a punctiuation, not when it wasnt.
+
+optimize.py
+--> When concattenating the rest of the DNA guess onto the attempt, the coder forgot to keep the guess in the string.
+--> What ended up happening was that the attempt would just turn into whatever the string was from current position to the end of the starting string
+
+evaluate.py
+--> You forgot to do the last evaluation. Because of how the loop worked, the loop would end before the last number was
+--> calculated into total. 
