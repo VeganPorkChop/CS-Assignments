@@ -55,8 +55,20 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Write your solution for Problem 3.1 here
+(define recording-procedure-count 5)
+;;could also be 8, not quite sure because the args to the struct are mutable and i forgot if we learned that and if it counts
+
+(define tango-song
+  (make-recording "Por una Cabeza" "tango" "Carlos Gardel"))
+
+(define (is-a-record? obj)
+  (if (recording? obj) #true #false))
+
+(check-expect (is-a-record? tango-song) #true)
 
 
+(define (a-selector obj)
+  (recording-
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -67,7 +79,8 @@
 
 ;; count-record : any any any -> number
 ;;   Count the number of recording data objects in the inputs.
-
+(define (count-recording rec1 rec2 rec3)
+  (lambda ()
 
 
 
