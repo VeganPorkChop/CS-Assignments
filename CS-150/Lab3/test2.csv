@@ -1,0 +1,7 @@
+id,name,host_id,host_name,neighbourhood_group,neighbourhood,latitude,longitude,room_type,price,minimum_nights,number_of_reviews,last_review,reviews_per_month,unused,availability_365,number_of_reviews_ltm,license
+0,n/a,182736,Mittens,n/a,n/a,0,0,Entire home/apt,1215,29,0,0,0,0,n/a,n/a,it's pending
+0,n/a,182736,Mittens,n/a,n/a,0,0,Private room,172,30,0,0,0,0,n/a,n/a,R1723617236
+0,n/a,182736,Mittens,n/a,n/a,0,0,Entire home/apt,12798,235,0,0,0,0,n/a,n/a,2732+
+0,n/a,127377,Caeser,n/a,n/a,0,0,Entire home/apt,2374,5,0,0,0,0,n/a,n/a,R12873132-
+0,n/a,127377,Caeser,n/a,n/a,0,0,Private room,2374,100,0,0,0,0,n/a,n/a,
+0,n/a,126357,Gigi,n/a,n/a,0,0,Entire home/apt,37263,3000,0,0,0,0,n/a,n/a,pending

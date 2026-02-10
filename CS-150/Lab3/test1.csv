@@ -1,0 +1,3 @@
+id,name,host_id,host_name,neighbourhood_group,neighbourhood,latitude,longitude,room_type,price,minimum_nights,number_of_reviews,last_review,reviews_per_month,unused,availability_365,number_of_reviews_ltm,license
+0,n/a,172632,Sarah,n/a,n/a,0,0,Entire home/apt,5,0,0,0,0,0,n/a,n/a,
+0,n/a,329038,Marvin,n/a,n/a,0,0,Private room,7,200,0,0,0,0,n/a,n/a,32-

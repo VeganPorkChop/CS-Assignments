@@ -1,0 +1,68 @@
+*******************************
+REPORT FOR chicago_listings.csv
+(Data as of September 22, 2025)
+*******************************
+
+Total listings: 8,663
+
+Listings that are:
+Short-term rentals : 5,587 (64.5%)
+Longer-term rentals: 3,076 (35.5%)
+
+Listings with room type:
+Entire home/apt: 6,670 (77.0%)
+Private room   : 1,840 (21.2%)
+Hotel room     : 117 (1.4%)
+Shared room    : 36 (0.4%)
+
+Number of unlicensed current listings, at least 2,884 (33.3%); including 2,880 with missing license and 4 pending
+licensed  : 5,766
+unlicensed: 2,880
+exempt    : 13
+pending   : 4
+
+Number of listings by hosts with multiple listings: 6,024 out of 8,663 total listings (69.5%)
+
+Listings by hosts with 1 listings  : 2,639
+Listings by hosts with 2 listings  : 842
+Listings by hosts with 3 listings  : 567
+Listings by hosts with 4 listings  : 328
+Listings by hosts with 5 listings  : 325
+Listings by hosts with 6 listings  : 324
+Listings by hosts with 7 listings  : 189
+Listings by hosts with 8 listings  : 200
+Listings by hosts with 9 listings  : 153
+Listings by hosts with 10+ listings: 3,096
+
+-----Analyzing prices-----
+7,828 prices in the list
+Average listing price $601.13
+Median listing price  $153.00
+
+6,202 prices for Entire home/apt
+Average entire apt price $246.51
+Median entire apt price  $177.00
+
+-----Top 10 hosts with the largest number of listings-----
+                  has 612
+LuxurybookingsFZE has 123
+Cloud9            has 99
+Milan             has 80
+Matt              has 65
+Anita             has 62
+Level             has 59
+Tina              has 48
+Sonder (Chicago)  has 45
+Jeremy            has 38
+
+-----Top 10 hosts with largest number of entire home listings-----
+                  has 612
+LuxurybookingsFZE has 123
+Cloud9            has 99
+Milan             has 80
+Matt              has 65
+Level             has 59
+Sonder (Chicago)  has 45
+Jeremy            has 38
+Assel             has 36
+Bella             has 35

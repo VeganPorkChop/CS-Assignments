@@ -140,37 +140,31 @@ def test_negate():
     arg_name = "lst"
 
     # basic case
-    result = [1, 2, 3, 4, 5]
+    inp = [1, 2, 3, 4, 5]
     expected = [-1, -2, -3, -4, -5]
-    original = copy.deepcopy(result)
+    original = copy.deepcopy(inp)
 
-    out = negate(result)
-    assert (
-        expected == result
-    ), f"expected {expected} to be stored in {arg_name} after calling {fn_name}({original}), got {result}"
-    assert out is None, f"expected {fn_name} to return None, got {out}"
+    result = negate(inp)
+    assert expected == result, f"expected {expected} for {fn_name}({original}), got {result}"
+    assert original == inp, f"{arg_name} was modified in {fn_name}, now contains {inp}"
 
     # empty list
-    result = []
+    inp = []
     expected = []
-    original = copy.deepcopy(result)
+    original = copy.deepcopy(inp)
 
-    out = negate(result)
-    assert (
-        expected == result
-    ), f"expected {expected} to be stored in {arg_name} after calling {fn_name}({original}), got {result}"
-    assert out is None, f"expected {fn_name} to return None, got {out}"
+    result = negate(inp)
+    assert expected == result, f"expected {expected} for {fn_name}({original}), got {result}"
+    assert original == inp, f"{arg_name} was modified in {fn_name}, now contains {inp}"
 
     # negative numbers, zero
-    result = [-10, 20, 0]
+    inp = [-10, 20, 0]
     expected = [10, -20, 0]
-    original = copy.deepcopy(result)
+    original = copy.deepcopy(inp)
 
-    out = negate(result)
-    assert (
-        expected == result
-    ), f"expected {expected} to be stored in {arg_name} after calling {fn_name}({original}), got {result}"
-    assert out is None, f"expected {fn_name} to return None, got {out}"
+    result = negate(inp)
+    assert expected == result, f"expected {expected} for {fn_name}({original}), got {result}"
+    assert original == inp, f"{arg_name} was modified in {fn_name}, now contains {inp}"
 
     print(f"tests for {fn_name} passed")
 

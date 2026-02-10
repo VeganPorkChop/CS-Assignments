@@ -49,8 +49,9 @@ def double_numbers_table(table):
             return_table[row].append(2*table[row][num])
     return return_table
 
-"""
+
 def negate(lst):
+    """
     Negates every number in lst (in-place)
 
     Args:
@@ -58,16 +59,14 @@ def negate(lst):
 
     Returns:
         None
-    
-    if len(lst) is 0:
-        return None
-    return_list = []
+    """
     for pos in range(len(lst)):
-        return_list.append(lst[pos]*-1)
-    return return_list
+        lst[pos] = (lst[pos]*-1)
+    
 
 
 def negate_table(table):
+    """
     Negates every number in table (in-place)
 
     Every row in table must be the same length
@@ -77,15 +76,12 @@ def negate_table(table):
 
     Returns:
         None
-    
-    if len(table) is 0:
-        return []
-    return_list = [[],[]]
+    """
     for row in range(len(table)):
         for col in range(len(table[row])):
-            return_list[row][col].append(-1*table[row][col])
-    return return_list
-"""
+            table[row][col] = (-1*table[row][col])
+    
+
 
 def get_lowercase(lst):
     """
@@ -245,9 +241,11 @@ def test_double_numbers_table():
 
     print(f"tests for {fn_name} passed")
 
-"""
+
 def test_negate():
-    
+    """
+    Test cases for negate
+    """
     fn_name = "negate"
     arg_name = "lst"
 
@@ -257,10 +255,10 @@ def test_negate():
     original = copy.deepcopy(result)
 
     out = negate(result)
-    #assert (
-    #    expected == result
-    #), f"expected {expected} to be stored in {arg_name} after calling {fn_name}({original}), got {result}"
-    #assert out is None, f"expected {fn_name} to return None, got {out}"
+    assert (
+        expected == result
+    ), f"expected {expected} to be stored in {arg_name} after calling {fn_name}({original}), got {result}"
+    assert out is None, f"expected {fn_name} to return None, got {out}"
 
     # empty list
     result = []
@@ -288,7 +286,9 @@ def test_negate():
 
 
 def test_negate_table():
-    
+    """
+    Test cases for negate table
+    """
     fn_name = "negate_table"
     arg_name = "table"
 
@@ -326,7 +326,6 @@ def test_negate_table():
     assert out is None, f"expected {fn_name} to return None, got {out}"
 
     print(f"tests for {fn_name} passed")
-"""
 
 def test_get_lowercase():
     """
@@ -372,8 +371,7 @@ def test_get_lowercase():
     assert original == inp, f"{arg_name} was modified in {fn_name}, now contains {inp}"
 
     print(f"tests for {fn_name} passed")
-
-
+    
 def test_make_lower():
     """
     Test cases for make_lower
@@ -515,8 +513,8 @@ def test_all():
     # run all of our tests
     test_double_numbers()
     test_double_numbers_table()
-    #test_negate()
-    #test_negate_table()
+    test_negate()
+    test_negate_table()
     test_get_lowercase()
     test_make_lower()
     test_sum_rows()

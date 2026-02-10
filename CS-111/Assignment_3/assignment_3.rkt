@@ -137,27 +137,26 @@
 
 ;; iterative-concat-words : (listof string) -> string
 ;;   Takes a list of strings and concatenates them using iterative recursion
-(check-expect ... "the;lazy;dog;")
+
 (define (iterative-concat-words lst-strs)
-  (local[(define(concat-words-helper lst-strs concat-words-initial-value)
-    (cond [(empty? lst-strs) concat-words-initial-value]
-          [else (concat-words-helper((rest list) (string-append concat-words-initial-value ";")))]))])
-  (concat-words-helper lst-strs ""))
+  (concat-words-helper lst-strs concat-words-initial-value))
 
 ;; Write your solution for Problem 5.1.1, concat-words-initial-value, here
 ;; concat-words-initial-value is the initial value for iteration in iterative-concat-words
 (define concat-words-initial-value
-  "fill me in")
-
+  "")
+(check-expect (iterative-concat-words (list "the" "lazy" "dog")) "the;lazy;dog;")
 ;; Write your solution for Problem 5.1.2, concat-words-helper, here
 
 ;; concat-words-helper : (listof string) string -> string
 ;;   concat-words-helper is the helper function for iterative-concat-words
 ;;   that concatenates the strings using iterative recursion
-(check-expect ... "the;lazy;dog;")
-(check-expect ... "the;lazy;dog;")
+(check-expect (iterative-concat-words (list "the" "lazy" "dog")) "the;lazy;dog;")
+(check-expect (concat-words (list "the" "lazy" "dog")) "the;lazy;dog;")
+
 (define (concat-words-helper lst-strs acc)
-  ...)
+  (cond [(empty? lst-strs) acc]
+          [else (concat-words-helper (rest lst-strs) (string-append acc (first lst-strs) ";"))]))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -167,14 +166,17 @@
 ;; Write your solution for Problem 5.2.1, find-short-words-helper, here
 
 ;; find-short-words-helper : number (listof string) (listof string) -> (listof string)
-(check-expect ...
-              (list "the" "lazy" "dog"))
+(check-expect (find-short-words-helper 5 (list "dog") (list "lazy" "the")) (list "the" "lazy" "dog"))
 
-
+(define (find-short-words-helper num lst acc)
+  (cond [(empty? lst) (reverse acc)]
+        [(>= num (string-length (first lst))) (find-short-words-helper num (rest lst) (append (list(first lst)) acc))]))
 ;; Write your solution for Problem 5.2.2, iterative-find-short-words, here
 
-;; iterative-find-short-words : number (listof string) -> (listof string)
 
+;; iterative-find-short-words : number (listof string) -> (listof string)
+(define(iterative-find-short-words num lst)
+  (find-short-words-helper num lst '()))
 
 
 
