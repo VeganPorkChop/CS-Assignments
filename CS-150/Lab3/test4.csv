@@ -1,0 +1,14 @@
+id,name,host_id,host_name,neighbourhood_group,neighbourhood,latitude,longitude,room_type,price,minimum_nights,number_of_reviews,last_review,reviews_per_month,unused,availability_365,number_of_reviews_ltm,license
+0,n/a,9001,MegaHost,n/a,n/a,0,0,Entire home/apt,100,1,0,0,0,0,n/a,n/a,R9001-0
+0,n/a,9001,MegaHost,n/a,n/a,0,0,Entire home/apt,101,1,0,0,0,0,n/a,n/a,R9001-1
+0,n/a,9001,MegaHost,n/a,n/a,0,0,Entire home/apt,102,1,0,0,0,0,n/a,n/a,R9001-2
+0,n/a,9001,MegaHost,n/a,n/a,0,0,Entire home/apt,103,1,0,0,0,0,n/a,n/a,R9001-3
+0,n/a,9001,MegaHost,n/a,n/a,0,0,Entire home/apt,104,1,0,0,0,0,n/a,n/a,R9001-4
+0,n/a,9001,MegaHost,n/a,n/a,0,0,Entire home/apt,105,1,0,0,0,0,n/a,n/a,R9001-5
+0,n/a,9001,MegaHost,n/a,n/a,0,0,Entire home/apt,106,1,0,0,0,0,n/a,n/a,R9001-6
+0,n/a,9001,MegaHost,n/a,n/a,0,0,Entire home/apt,107,1,0,0,0,0,n/a,n/a,R9001-7
+0,n/a,9001,MegaHost,n/a,n/a,0,0,Entire home/apt,108,1,0,0,0,0,n/a,n/a,R9001-8
+0,n/a,9001,MegaHost,n/a,n/a,0,0,Entire home/apt,109,1,0,0,0,0,n/a,n/a,R9001-9
+0,n/a,9002,DuoHost,n/a,n/a,0,0,Private room,75,7,0,0,0,0,n/a,n/a,pending
+0,n/a,9002,DuoHost,n/a,n/a,0,0,Private room,85,40,0,0,0,0,n/a,n/a,
+0,n/a,9003,SoloHost,n/a,n/a,0,0,Shared room,50,3,0,0,0,0,n/a,n/a,something 32+ something

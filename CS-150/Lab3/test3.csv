@@ -1,0 +1,6 @@
+id,name,host_id,host_name,neighbourhood_group,neighbourhood,latitude,longitude,room_type,price,minimum_nights,number_of_reviews,last_review,reviews_per_month,unused,availability_365,number_of_reviews_ltm,license
+0,n/a,111,Ava,n/a,n/a,0,0,Entire home/apt,150,2,0,0,0,0,n/a,n/a,R111111
+0,n/a,222,Ben,n/a,n/a,0,0,Private room,80,30,0,0,0,0,n/a,n/a,pending approval
+0,n/a,222,Ben,n/a,n/a,0,0,Shared room,,5,0,0,0,0,n/a,n/a,xx32 +yy
+0,n/a,333,Cleo,n/a,n/a,0,0,,60,10,0,0,0,0,n/a,n/a,
+0,n/a,444,Drew,n/a,n/a,0,0,Hotel room,200,29,0,0,0,0,n/a,n/a,note: 32- exempt
