@@ -1,0 +1,24 @@
+Simulation of 3 light(s)
+Timestep: 11
+========================
+
+START
+
+...
+
+Car (id: 2)
+Car (id: 3)
+Light (id: 1): Green
+---
+Car (id: 1)
+
+...
+
+Light (id: 2): Red
+---
+
+...
+
+Light (id: 3): Red
+---
+FINISH

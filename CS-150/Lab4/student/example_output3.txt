@@ -1,0 +1,28 @@
+Simulation of 4 light(s)
+Timestep: 12
+========================
+
+START
+
+...
+
+Light (id: 1): Green
+---
+Car (id: 1)
+Car (id: 2)
+
+...
+
+Light (id: 2): Red
+---
+
+...
+
+Light (id: 3): Red
+---
+
+...
+
+Light (id: 4): Green
+---
+FINISH
