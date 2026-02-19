@@ -1,6 +1,6 @@
 """
-Author: YOUR NAME HERE
-Starting Date: YOUR STARTING DATE HERE
+Author: Graham Gilbert-Schroeer
+Starting Date: 2/13/26
 
 Initial creation by Dietrich Geisler on 10/25/2025
 

@@ -1,6 +1,6 @@
 """
-Author: YOUR NAME HERE
-Starting Date: YOUR STARTING DATE HERE
+Author: Graham G-S
+Starting Date: 2/13/26
 
 Initial creation by Dietrich Geisler on 10/25/2025
 
@@ -87,15 +87,12 @@ class Light:
 
     def add_car_to_queue(self, car: 'Car'):
         """Adds a Car to the queue of Cars waiting at this Light"""
-        # TODO: Implement me!
-
+        self.queue.append(car)
         return
 
     def queue_length(self) -> int:
         """Returns the number of Cars waiting in this Light's queue"""
-        # TODO: Implement me!
-
-        return
+        return len(self.queue)
 
     def advance_queue(self) -> 'Car':
         """Advances the queue of this Light by one and returns the passing car
@@ -110,9 +107,10 @@ class Light:
         Returns:
             The Car that was removed from the queue
         """
-        # TODO: Implement me!
-
-        return Car()
+        first = self.queue[0]
+        self.queue = self.queue[1:]
+        return first
+    
 
     def can_go(self) -> bool:
         """Indicates whether or not cars can pass through this Light
@@ -126,8 +124,8 @@ class Light:
         Returns:
             True if Cars can pass through this Light, and False otherwise
         """
-        # TODO: Implement me!
-
+        if (self.is_green and (self.countdown <= (self.max_countdown-1))):
+            return True
         return False
 
     def timestep(self):
@@ -139,9 +137,10 @@ class Light:
            a. this light changes color
            b. the countdown is reset to max_countdown
         """
-        # TODO: Implement me!
-
-        return
+        self.countdown-=1
+        if self.countdown == 0:
+            self.is_green = not self.is_green
+            self.countdown = self.max_countdown
 
 
 # Part 2: Car
@@ -213,19 +212,16 @@ class Car:
 
     def number_of_lights(self) -> int:
         """Returns the number of Lights this Car must still pass through"""
-        # TODO: Implement me!
-
-        return 0
-
+        return len(self.remaining_lights)
+    
     def is_at_light(self) -> bool:
         """Returns whether or not this Car is currently stopped at a Light
 
         Returns:
             True if this Car is stopped at a Light, or False otherwise
         """
-
-        # TODO: Implement me!
-
+        if self.current_light is not None:
+            return True
         return False
 
     def start_going(self):
@@ -242,7 +238,8 @@ class Car:
 
         HINT: Recall that Python provides a function for this in random.randint
         """
-        # TODO: Implement me!
+        self.current_light = None
+        self.travel_time = random.randint(TRAVEL_TIME, TRAVEL_TIME+TRAVEL_VARIATION)
 
         return
 
@@ -265,8 +262,13 @@ class Car:
               an error when the list of lights is empty
         """
 
-        # TODO: Implement me!
-
+        if self.current_light is not None:
+            return
+        self.travel_time -= 1
+        if self.travel_time == 0:
+            self.current_light = self.remaining_lights[0]
+            self.remaining_lights = self.remaining_lights[1:]
+            self.current_light.add_car_to_queue(self)
         return
 
 
@@ -359,17 +361,11 @@ class Simulation:
 
     def number_of_lights(self) -> int:
         """Returns the number of lights managed by this Simulation"""
-
-        # TODO: Implement me!
-
-        return 0
-
+        return len(self.lights)
+    
     def active_cars(self) -> int:
         """Returns the number of Cars currently tracked by this simulation"""
-
-        # TODO: Implement me!
-
-        return 0
+        return len(self.cars)
 
     def waiting_car_count(self) -> int:
         """Returns the total number of Cars currently waiting at traffic lights in this Simulation
@@ -377,10 +373,10 @@ class Simulation:
         This number includes all Cars waiting at all traffic lights
         But does not include Cars traveling between traffic lights
         """
-
-        # TODO: Implement me!
-
-        return 0
+        count = 0
+        for light in self.lights:
+            count += len(light.queue)
+        return count
 
     def car_counts(self) -> list[int]:
         """Calculates the number of Cars waiting at each traffic light
@@ -394,9 +390,11 @@ class Simulation:
         Returns:
             A list where each index i is the number of Cars waiting at the (i+1)th traffic light
         """
-        # TODO: Implement me!
+        counts = []
+        for light in self.lights:
+            counts.append(len(light.queue))
+        return counts
 
-        return []
 
     def timestep(self):
         """Advances this Simulation by exactly 1 timestep
@@ -427,7 +425,20 @@ class Simulation:
               you may want to be careful about passing in self.lights directly...
         """
 
-        # TODO: Implement me!
+        self.timestep_count+=1
+        for light in self.lights:
+            light.timestep()
+            if light.can_go() and light.queue_length() > 0:
+                car = light.advance_queue()
+                car.start_going()
+                if car.number_of_lights() == 0:
+                    self.cars.remove(car)
+        for car in self.cars:            
+            car.timestep()
+        self.spawn_countdown-=1
+        if self.spawn_countdown == 0:
+            self.cars.append(Car(self.lights))
+            self.spawn_countdown = random.randint(self.spawn_time, self.spawn_time+SPAWN_VARIATION)
 
         return
 
@@ -440,8 +451,8 @@ class Simulation:
             timesteps: the number of timesteps to advance this simulation
         """
 
-        # TODO: Implement me!
-
+        for _ in range(timesteps):
+            self.timestep()
         return
 
 
