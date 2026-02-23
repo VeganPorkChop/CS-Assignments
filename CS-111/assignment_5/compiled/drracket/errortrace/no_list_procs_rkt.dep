@@ -1,0 +1,1 @@
+("9.0" ta6nt ("80335c0c0ba5447bdd1d937198a6a1370672d2c9" . "8dc02edfc660c310ce2b62d7455f2a21f4ca92c8") (collects #"drracket" #"private" #"drracket-errortrace-key.rkt") (collects #"lang" #"htdp-intermediate-lambda.rkt") (collects #"racket" #"base.rkt") (collects #"racket" #"runtime-config.rkt") (collects #"racket" #"splicing.rkt") (collects #"racket" #"stxparam.rkt"))
