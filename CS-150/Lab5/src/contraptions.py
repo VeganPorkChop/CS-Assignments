@@ -187,7 +187,7 @@ class TripleLaserPointer(Contraption):
             while next[i] is not None:
                 if isinstance(next[i].actor(), Cat):
                     next[i].actor().distract(1)
-                    return
+                    break
                 next[i] = next[i].entrance()
 
 class ColorfulBall(Contraption):

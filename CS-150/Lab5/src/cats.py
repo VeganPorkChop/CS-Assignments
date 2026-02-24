@@ -125,57 +125,66 @@ class Cat(Actor):
         self.spaceheater()
 
     def spaceheater(self):
-        """Check for nearby SpaceHeaters (within range of 2: ≤1 row and ≤2 columns)"""
+        """Check for nearby SpaceHeaters (within range of 2: ≤1 row and ≤2 columns, plus 2 rows away at same column)"""
         from src.contraptions import SpaceHeater
         
-        if not self.is_on_board():
+        if not self.is_on_board() or not GameManager.is_initialized():
             return
         
-        # Check if game manager is still initialized (game hasn't ended)
-        if not GameManager.is_initialized():
-            return
+        my_tile = self.tile()
         
-        # Check all contraptions on the board
         for contr in GameManager.manager()._contraptions:
-            if isinstance(contr, SpaceHeater) and contr.is_on_board():
-                heater_tile = contr.tile()
-                current = heater_tile
-                for _ in range(2):
-                    if current.exit() is not None:
-                        current = current.exit()
-                        if current == self.tile():
-                            self.distract(1)
-                            return
-                
-                current = heater_tile
-                for _ in range(2):
-                    if current.entrance() is not None:
-                        current = current.entrance()
-                        if current == self.tile():
-                            self.distract(1)
-                            return
-                if heater_tile.above() is not None and heater_tile.above() == self.tile():
-                    self.distract(1)
-                    return
-                if heater_tile.below() is not None and heater_tile.below() == self.tile():
-                    self.distract(1)
-                    return
-                if heater_tile.exit() is not None:
-                    forward_tile = heater_tile.exit()
-                    if forward_tile.above() is not None and forward_tile.above() == self.tile():
-                        self.distract(1)
-                        return
-                    if forward_tile.below() is not None and forward_tile.below() == self.tile():
-                        self.distract(1)
-                        return
-                if heater_tile.entrance() is not None:
-                    backward_tile = heater_tile.entrance()
-                    if backward_tile.above() is not None and backward_tile.above() == self.tile():
-                        self.distract(1)
-                        return
-                    if backward_tile.below() is not None and backward_tile.below() == self.tile():
-                        self.distract(1)
-                        return
+            if not isinstance(contr, SpaceHeater) or not contr.is_on_board():
+                continue
+            
+            heater_tile = contr.tile()
+            
+            # Build list of all tiles in range (Manhattan distance ≤ 2)
+            tiles_in_range = []
+            
+            # Same row: forward and backward up to 2 steps
+            current = heater_tile
+            for _ in range(2):
+                if current.exit() is not None:
+                    current = current.exit()
+                    tiles_in_range.append(current)
+            
+            current = heater_tile
+            for _ in range(2):
+                if current.entrance() is not None:
+                    current = current.entrance()
+                    tiles_in_range.append(current)
+            
+            # Adjacent rows (±1 row): at heater's column and ±1 column
+            if heater_tile.above() is not None:
+                adjacent = heater_tile.above()
+                tiles_in_range.append(adjacent)  # at heater's column
+                if adjacent.exit() is not None:
+                    tiles_in_range.append(adjacent.exit())  # 1 step forward
+                if adjacent.entrance() is not None:
+                    tiles_in_range.append(adjacent.entrance())  # 1 step backward
+            
+            if heater_tile.below() is not None:
+                adjacent = heater_tile.below()
+                tiles_in_range.append(adjacent)  # at heater's column
+                if adjacent.exit() is not None:
+                    tiles_in_range.append(adjacent.exit())  # 1 step forward
+                if adjacent.entrance() is not None:
+                    tiles_in_range.append(adjacent.entrance())  # 1 step backward
+            
+            # Rows 2 away (distance 2): only at heater's column
+            row_2_above = heater_tile.above()
+            if row_2_above is not None and row_2_above.above() is not None:
+                tiles_in_range.append(row_2_above.above())
+            
+            row_2_below = heater_tile.below()
+            if row_2_below is not None and row_2_below.below() is not None:
+                tiles_in_range.append(row_2_below.below())
+            
+            # Check if my tile is in range
+            if my_tile in tiles_in_range:
+                self.distract(1)
+                return
 
 
     def rest(self):
