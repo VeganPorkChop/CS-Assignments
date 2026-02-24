@@ -1,6 +1,6 @@
 """
-Author: YOUR NAME HERE
-Starting Date: YOUR STARTING DATE HERE
+Author: Graham Gilbert-Schroeer
+Starting Date: 2/24/26
 
 Cat definitions for Cats vs Homework
 """
@@ -204,10 +204,24 @@ class Calico(Cat):
           5 starting attention,
           and 4 rounds of needed rest time
         """
-        # TODO: Implement me!
-        assert False, "Calico unimplemented"
+        super().__init__('calico', 5, 4, initial_rest_time)
 
-    # TODO: potentially override more methods of Cat
+    def distract(self, amount: int):
+        """
+        Distracts this cat by the given amount
+        amount must be a positive integer
+        If this cat is fully distracted (has no attention left)
+          this cat is removed from the board and starts resting
+        """
+        assert isinstance(amount, int) and amount >= 0
+        self._attention -= amount
+        if self.tile().above() is not None and self.tile().above().is_empty():
+            self.teleport(self.tile().above())
+        if self._attention <= 0:
+            self._attention = 0
+            self._rest_time = self._needed_rest_time
+            self.remove_from_board()
+
 
 
 class Kitten(Cat):
@@ -223,7 +237,10 @@ class Kitten(Cat):
           3 starting attention,
           and 6 rounds of needed rest time
         """
-        # TODO: Implement me!
-        assert False, "Kitten unimplemented"
+        super().__init__('kitten', 3, 6, initial_rest_time)
 
-    # TODO: potentially override more methods of Cat
+    def end_round(self):
+        was_already_on_board = self.is_on_board()
+        super().end_round()
+        if was_already_on_board:
+            super().end_round()

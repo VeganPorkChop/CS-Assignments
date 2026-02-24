@@ -125,10 +125,6 @@ class BatteryCharger(Contraption):
         self._ready = False
 
     def end_round(self):
-        """
-        A laser pointer distracts the first cat in its lane
-        """
-        self._ready != self._ready
         if self._ready:
             GameManager.manager().add_batteries(1)
         next = self._tile.entrance()
@@ -138,6 +134,7 @@ class BatteryCharger(Contraption):
                 GameManager.manager().remove_contraption(self)
                 return  # we can simply return when we find a cat
             next = next.entrance() 
+        self._ready = not self._ready
 
 class BallThrower(Contraption):
     """
@@ -150,10 +147,19 @@ class BallThrower(Contraption):
         The constructor for a BallThrower
         Ball throwers have an image name 'thrower' and cost 3 batteries
         """
-        # TODO: Implement me!
-        super().__init__('empty', 100)
+        super().__init__('thrower', 3)
 
-    # TODO: potentially override more methods of Contraption
+    def end_round(self):
+        location = self._tile
+        for _ in range(3):
+            location = location.entrance()
+            if location is None:
+                return
+            if isinstance(location.actor(), Cat):
+                location.actor().distract(1)
+                return
+
+             
 
 # Part 3: "Advanced Contraptions"
 # We recommend adding more Cats before implementing these contraptions

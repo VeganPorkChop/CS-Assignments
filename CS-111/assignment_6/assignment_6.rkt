@@ -14,13 +14,14 @@
 ;; sum : (listof number) -> number
 
 (define (sum lst)
-  "sum: fill me in")
+  (if (empty? lst) 0 (+ (first lst) (sum (rest lst)))))
 
 (check-satisfied sum procedure?)
 
 ;; count-files : path -> number
 (define (count-files dir-path)
-  "count-files: fill me in")
+  (+ (length (directory-files dir-path))
+  (sum (map count-files (directory-subdirectories dir-path)))))
 
 (check-satisfied count-files procedure?)
 
@@ -32,7 +33,7 @@
 
 ;; concat : (listof (listof path)) -> (listof path)
 (define (concat lst-of-lists)
-  "concat: fill me in")
+  (apply append lst-of-lists))
 
 (check-satisfied concat procedure?)
 (check-expect
