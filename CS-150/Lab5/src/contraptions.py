@@ -102,10 +102,10 @@ class SnackDispenser(Contraption):
         self._uses = 0
 
     def interact(self):
-        self._uses+=1
+        self._uses += 1
         if self._uses >= 5:
-            self._tile = None
-            GameManager.manager().remove_contraption(self)
+            # Call parent's interact to properly remove
+            super().interact()
             
 
 
@@ -130,8 +130,8 @@ class BatteryCharger(Contraption):
         next = self._tile.entrance()
         while next is not None:
             if isinstance(next.actor(), Cat):
-                self._tile = None
-                GameManager.manager().remove_contraption(self)
+                # Use interact() to properly remove
+                self.interact()
                 return  # we can simply return when we find a cat
             next = next.entrance() 
         self._ready = not self._ready
@@ -176,10 +176,38 @@ class TripleLaserPointer(Contraption):
         The constructor for a TripleLaserPointer
         Triple laser pointers have an image name 'triple_laser' and cost 12 batteries
         """
-        # TODO: Implement me!
-        super().__init__('empty', 100)
+        super().__init__('triple_laser', 12)
 
-    # TODO: potentially override more methods of Contraption
+    def end_round(self):
+        """
+        A laser pointer distracts the first cat in its lane
+        """
+        next = [self._tile.entrance(),self._tile.above().entrance(),self._tile.below().entrance()]
+        for i in range(len(next)):
+            while next[i] is not None:
+                if isinstance(next[i].actor(), Cat):
+                    next[i].actor().distract(1)
+                    return
+                next[i] = next[i].entrance()
+
+class ColorfulBall(Contraption):
+    def __init__(self):
+        # colorful balls are temporary contraptions with no cost
+        super().__init__('colorful_ball', 0)
+
+    def interact(self):
+        if not self.is_on_board():
+            return
+        target_tile = self.tile()
+        entrance_tile = target_tile.entrance()
+        if entrance_tile is not None and isinstance(entrance_tile.actor(), Cat):
+            cat = entrance_tile.actor()
+            cat.distract(1)
+            # remove the ball first, then teleport the cat into this tile
+            super().interact()
+            cat.teleport(target_tile)
+
+    
 
 
 class ColorfulBallThrower(Contraption):
@@ -194,8 +222,22 @@ class ColorfulBallThrower(Contraption):
         The constructor for a ColorfulBallThrower
         Colorful ball throwers have an image name 'colorful_thrower' and cost 5 batteries
         """
-        # TODO: Implement me!
-        super().__init__('empty', 100)
+        super().__init__('colorful_thrower', 5)
+    
+    def end_round(self):
+        location = self._tile
+        furthest_empty = None
+        for _ in range(3):
+            location = location.entrance()
+            if location is None:
+                break
+            if location.is_empty():
+                furthest_empty = location
+            if isinstance(location.actor(), Cat):
+                location.actor().distract(1)
+                return
+        if furthest_empty is not None:
+            ColorfulBall().place(furthest_empty)
 
     # TODO: potentially override more methods of Contraption and/or update Cat
     # Note that you are permitted to change this to be a child class of BallThrower
@@ -218,8 +260,7 @@ class SpaceHeater(Contraption):
         The constructor for a SpaceHeater
         Space heaters have an image name 'heater' and cost 4 batteries
         """
-        # TODO: Implement me!
-        super().__init__('empty', 100)
+        super().__init__('heater', 4)
 
     # TODO: potentially update Cat to work with the space heater
     # Note that the space heater does not distract the cat during its action...

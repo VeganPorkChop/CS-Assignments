@@ -121,8 +121,62 @@ class Cat(Actor):
         else:
             pass
 
-        # TODO (hint): consider modifying this method when building the logic
-        #   for the ColorfulBallThrower and SpaceHeater classes
+        # Check for nearby SpaceHeaters after moving
+        self.spaceheater()
+
+    def spaceheater(self):
+        """Check for nearby SpaceHeaters (within range of 2: ≤1 row and ≤2 columns)"""
+        from src.contraptions import SpaceHeater
+        
+        if not self.is_on_board():
+            return
+        
+        # Check if game manager is still initialized (game hasn't ended)
+        if not GameManager.is_initialized():
+            return
+        
+        # Check all contraptions on the board
+        for contr in GameManager.manager()._contraptions:
+            if isinstance(contr, SpaceHeater) and contr.is_on_board():
+                heater_tile = contr.tile()
+                current = heater_tile
+                for _ in range(2):
+                    if current.exit() is not None:
+                        current = current.exit()
+                        if current == self.tile():
+                            self.distract(1)
+                            return
+                
+                current = heater_tile
+                for _ in range(2):
+                    if current.entrance() is not None:
+                        current = current.entrance()
+                        if current == self.tile():
+                            self.distract(1)
+                            return
+                if heater_tile.above() is not None and heater_tile.above() == self.tile():
+                    self.distract(1)
+                    return
+                if heater_tile.below() is not None and heater_tile.below() == self.tile():
+                    self.distract(1)
+                    return
+                if heater_tile.exit() is not None:
+                    forward_tile = heater_tile.exit()
+                    if forward_tile.above() is not None and forward_tile.above() == self.tile():
+                        self.distract(1)
+                        return
+                    if forward_tile.below() is not None and forward_tile.below() == self.tile():
+                        self.distract(1)
+                        return
+                if heater_tile.entrance() is not None:
+                    backward_tile = heater_tile.entrance()
+                    if backward_tile.above() is not None and backward_tile.above() == self.tile():
+                        self.distract(1)
+                        return
+                    if backward_tile.below() is not None and backward_tile.below() == self.tile():
+                        self.distract(1)
+                        return
+
 
     def rest(self):
         """
@@ -242,5 +296,5 @@ class Kitten(Cat):
     def end_round(self):
         was_already_on_board = self.is_on_board()
         super().end_round()
-        if was_already_on_board:
+        if was_already_on_board and GameManager.is_initialized():
             super().end_round()
