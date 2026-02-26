@@ -27,8 +27,9 @@
 
 ;; directory-size : path -> number
 (define (directory-size dir-path)
-  "directory-size: fill me in")
-
+  (+ (sum (map file-size (directory-files dir-path)))
+     (sum (map directory-size (directory-subdirectories dir-path)))))
+          
 (check-satisfied directory-size procedure?)
 
 ;; concat : (listof (listof path)) -> (listof path)
@@ -47,13 +48,20 @@
 
 ;; all-directories : path -> (listof path)
 (define (all-directories dir-path)
-  "all-directories : fill me in")
+  (append (directory-files dir-path) (map all-directories (directory-subdirectories dir-path))))
 
 (check-satisfied all-directories procedure?)
 
 ;; search-file-name : string path -> (listof path)
 (define (search-file-name name dir-path)
-  "search-file-name fill me in")
+  (append
+   (filter (lambda (p)
+             (string=? name
+                       (substring (path->string (path-filename p))
+                                  0 (- (string-length (path->string (path-filename p))) 4))))
+           (directory-files dir-path))
+   (concat (map (lambda (d) (search-file-name name d))
+                (directory-subdirectories dir-path)))))
 
 (check-satisfied search-file-name procedure?)
 (check-expect
@@ -89,14 +97,16 @@
     (for-each (λ (file)
                 ; print the name of the file being copied into the REPL
                 ; for more on how `printf` works, see Appendix 1 in the pdf
-                (begin
-                  (printf "Copying file ~A to ~A~n"
-                          file
-                          (build-path to (path-filename file)))
-                  (copy-file! file
-                              (build-path to (path-filename file))
-                              #true)))
-              (directory-files from))
+                ;when file doesnt exist in to directory or its "out of date"
+                (when (or (not(file-exists? (build-path to (path-filename file)))) (not(equal? (file-or-directory-modify-seconds file) (file-or-directory-modify-seconds (build-path to (path-filename file))))))
+                  (begin
+                    (printf "Copying file ~A to ~A~n"
+                            file
+                            (build-path to (path-filename file)))
+                    (copy-file! file
+                                (build-path to (path-filename file))
+                                #true))))
+                  (directory-files from))
 
     ; for each folder (recursive child node) in the origin directory,
     ; recursively `backup!` its contents
