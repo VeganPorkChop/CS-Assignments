@@ -56,9 +56,8 @@
 (define (search-file-name name dir-path)
   (append
    (filter (lambda (p)
-             (string=? name
-                       (substring (path->string (path-filename p))
-                                  0 (- (string-length (path->string (path-filename p))) 4))))
+             (string-contains? name
+                               (path->string (path-filename p))))
            (directory-files dir-path))
    (concat (map (lambda (d) (search-file-name name d))
                 (directory-subdirectories dir-path)))))
