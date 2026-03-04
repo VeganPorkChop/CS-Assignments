@@ -61,16 +61,18 @@ line 2
 
 ;Part 2
 ;Define the multichoice-question struct and its methods here. 
-(define (multiplechoice-question question) (option-count options)
+(define-struct (multichoice-question question) [option-count options]
   #:methods
   (define (show-text q)
-    (local[(define lst multiplechoice-question-options q)
-           (define counter 1)]
+    (local[(define counter 0)]
     (begin
-      (printf "Q: ~a (~a points)\nEnter a choice between 1 and ~a:\n" (question-text q) (question-points) (multiplechoice-question-option-count q))
-      (while (not(empty? (lst)))
-             (begin
-               (printf "~a. ~a" 
+      (printf "Q: ~a (~a points)\nEnter a number between 1 and ~a:\n" (question-text q) (question-points q) (multichoice-question-option-count q))
+      (for-each (lambda(lst) (begin
+                               (set! counter (+ 1 counter))
+                               (printf "~a. ~a\n" counter lst)
+                               ))
+                  (multichoice-question-options q))))))
+                                     
                  
       
 ;a multiple choice question is a ...
@@ -100,7 +102,12 @@ line 2
                 "3. Sectumsempra\n"))
 
 ;Define the numeric-question struct and its methods here. 
+(define-struct (numeric-question question) [delta]
+  #:methods
+  (define (check-response q response)
+    (and (< (- (question-answer q) (numeric-question-delta q)) response) (> (+ (question-answer q) (numeric-question-delta q)) response))))
 
+  
 ;a numeric question is a ...
 ; (make-numeric-question string number number number)
 

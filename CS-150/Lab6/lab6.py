@@ -154,9 +154,10 @@ class BayesClassifier:
         _, _, files = next(os.walk(training_data), (None, None, []))
         if not files:
             raise RuntimeError(f"Couldn't find path {training_data}")
-        print(training_data)
-        this = self.load_file(training_data)
-        print(this)
+        for file in files:
+            temp = self.load_file(file)
+            lst = self.tokenize(temp)
+
         # HINT: you may use the "files" list built above
         #       (try printing it out with a test case if you're not sure what's inside)
         # HINT: consider using some of the methods defined above, including load_file
