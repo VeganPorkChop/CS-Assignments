@@ -122,23 +122,23 @@ class BayesClassifier:
         return
 
     def tokenize(self, text: str) -> list[str]:
-        """Split the given text into a list of the individual tokens in order
+        allowed = list("abcdefghijklmnopqrstuvwxyz0123456789'-_")
 
-        Specifically, tokens consist of lowercase letters, digits, and the symbols ', -, and _
-          such that each word in the text is a distinct string in the output list
+        tokens = []
+        word = ""
 
-        Words are considered to be separated by _any_ non-tokenized characters
+        for ch in text.lower():
+            if ch in allowed:
+                word += ch
+            else:
+                if word != "":
+                    tokens.append(word)
+                    word = ""
 
-        For example,
-        tokenize('Hello World 1234-5678') -> ['hello', 'world', '1234-5678']
+        if word != "":
+            tokens.append(word)
 
-        Args:
-            text: The text to tokenize
-
-        Returns:
-            The tokens of given text in order
-        """
-        return text.lower().split()
+        return tokens
 
     def train(self, training_data: str):
         """Train the Naive Bayes Sentiment Classifier
@@ -154,9 +154,14 @@ class BayesClassifier:
         _, _, files = next(os.walk(training_data), (None, None, []))
         if not files:
             raise RuntimeError(f"Couldn't find path {training_data}")
-        for file in files:
-            temp = self.load_file(file)
-            lst = self.tokenize(temp)
+        for fname in files:
+            full_path = os.path.join(training_data, fname)
+            text = self.load_file(full_path)
+            tokens = self.tokenize(text)
+            if fname.startswith(POSITIVE_FILE_PREFIX):
+                self.update_dict(tokens, self.pos_freqs)
+            elif fname.startswith(NEGATIVE_FILE_PREFIX):
+                self.update_dict(tokens, self.neg_freqs)
 
         # HINT: you may use the "files" list built above
         #       (try printing it out with a test case if you're not sure what's inside)
@@ -175,11 +180,11 @@ class BayesClassifier:
         """Classify the given text as negative or positive
 
         This is done by calculating the most likely document class
-          as described in the lab writeup
-          and using the pos_freqs and neg_freqs dictionaries associated with this classifier
+        as described in the lab writeup
+        and using the pos_freqs and neg_freqs dictionaries associated with this classifier
 
         If either dictionary is empty (i.e., this classifier is untrained)
-          then the behavior of this function is unspecified (anything can happen)
+        then the behavior of this function is unspecified (anything can happen)
 
         Args:
             text: The text to classify
@@ -187,16 +192,22 @@ class BayesClassifier:
         Returns:
             The classification string, either 'positive' or 'negative'
         """
-        # TODO: Implement me!
+        tokens = self.tokenize(text)
 
-        # NOTE: remember that you need to tokenize as usual
-        # NOTE: remember that we should add 1 to pos_count and neg_count before taking log
-        # NOTE: some strings may not be in self.pos_freqs or self.neg_freqs
+        pos_total = sum(self.pos_freqs.values())
+        neg_total = sum(self.neg_freqs.values())
 
-        # Hint: don't overthink the logic of this function
-        #       it's pretty simple, and the trickiness is all in calculating the probabilities
+        pos_prob = 1
+        neg_prob = 1
 
-        # Hint: remember to test this function using main.py,
-        #       otherwise you may end up failing some hidden test cases...
+        for word in tokens:
+            pos_count = self.pos_freqs.get(word, 0)
+            neg_count = self.neg_freqs.get(word, 0)
 
-        return ''
+            pos_prob *= (pos_count + 1) / pos_total
+            neg_prob *= (neg_count + 1) / neg_total
+
+        if pos_prob > neg_prob:
+            return "positive"
+        else:
+            return "negative"

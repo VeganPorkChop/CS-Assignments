@@ -53,6 +53,20 @@ def test_classifier_update_dict():
 
     # TODO: add 2 update dictionary tests here
 
+    lst = ['x', 'y', 'x']
+    result = {'x': 1}
+    classifier.update_dict(lst, result)
+    expected = {'x': 3, 'y': 1}
+    error_message = f'while testing {fn_name}, expected {expected} got {result}'
+    assert expected == result, error_message
+
+    lst = []
+    result = {'a': 1}
+    classifier.update_dict(lst, result)
+    expected = {'a': 1}
+    error_message = f'while testing {fn_name}, expected {expected} got {result}'
+    assert expected == result, error_message
+
     print(f'{fn_name} tests passed')
 
 
@@ -79,6 +93,16 @@ def test_classifier_tokenize():
     assert expected == result, error_message
 
     # TODO: add 2 more tokenizer tests here
+
+    result = classifier.tokenize('HELLO!!!')
+    expected = ['hello']
+    error_message = f'while testing {fn_name}, expected {expected} got {result}'
+    assert expected == result, error_message
+
+    result = classifier.tokenize('word1_word2-word3')
+    expected = ['word1_word2-word3']
+    error_message = f'while testing {fn_name}, expected {expected} got {result}'
+    assert expected == result, error_message
 
     print(f'{fn_name} tests passed')
 
@@ -172,6 +196,20 @@ def test_classifier_classify():
     #         since calculating out logarithms is painful and not worth your time
     #       instead focus on "edge" cases, such as words missing from the dictionaries
 
+    classifier.pos_freqs = {'good': 3}
+    classifier.neg_freqs = {'bad': 3}
+    result = classifier.classify('good')
+    expected = 'positive'
+    error_message = f'while testing {fn_name}, expected {expected} got {result}'
+    assert expected == result, error_message
+
+    classifier.pos_freqs = {'good': 1}
+    classifier.neg_freqs = {'bad': 3}
+    result = classifier.classify('unknownword')
+    expected = 'positive'
+    error_message = f'while testing {fn_name}, expected {expected} got {result}'
+    assert expected == result, error_message
+
     print(f'{fn_name} tests passed')
 
 
@@ -181,9 +219,7 @@ def test_all():
     test_classifier_tokenize()
     test_classifier_train()
     test_classifier_classify()
-
     print('All tests passed!')
-
 
 if __name__ == "__main__":
     test_all()

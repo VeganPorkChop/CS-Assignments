@@ -1,0 +1,4 @@
+#lang htdp/asl
+
+(define (filter-map predicate lst)
+  (if (predicate (first lst)) (append (first lst) (filter-map predicate (rest lst))) (filter-map predicate (rest lst))))
