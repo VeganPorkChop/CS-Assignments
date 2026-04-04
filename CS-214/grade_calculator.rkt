@@ -1,5 +1,14 @@
 #lang dssl2
 
+let eight_principles = ["Know your rights.",
+    "Acknowledge your sources.",
+    "Protect your work.",
+    "Avoid suspicion.",
+    "Do your own work.",
+    "Never falsify a record or permit another person to do so.",
+    "Never fabricate data, citations, or experimental results.",
+    "Always tell the truth when discussing your work with your instructor."]
+
 # HW1: Grade Calculator
 
 ###
@@ -31,8 +40,8 @@ def letter_grade? (str): return linear_search(letter_grades, str)
 ###
 
 def integration_grade(project_score: int?) -> track_grade?:
-    test 'score out of range':
-        assert project_score >=0 and project_score <=6
+    if not project_score >=0 or not project_score <=6:
+        error('score out of range')  
     if project_score <=1:
         return  "F"
     elif project_score <=2:
@@ -46,22 +55,26 @@ def integration_grade(project_score: int?) -> track_grade?:
     
 
 test 'first integration_grade test; you will need to add more':
-    assert integration_grade(0) == 'F'
-    assert integration_grade(5) == 'B'
+    assert_error integration_grade(7), "score out of range"
+    assert_error integration_grade(6.1), "contract violation"
+    assert integration_grade(6) == 'A'
+    assert integration_grade(5) == 'B' and integration_grade(4) == 'B'
+    assert integration_grade(3) == 'C'
+    assert integration_grade(2) == 'D'
+    assert integration_grade(1) == 'F' and integration_grade(0) == 'F'
 
 def implementation_grade(homework_scores: VecC[int?]) -> track_grade?:
-    test 'incorrect number of assignments': 
-        assert len(homework_scores) == 5
+    if not len(homework_scores) == 5:
+        error("incorrect number of assignments")
     
     let total = 0
     for i in homework_scores:
-        test 'score out of range':
-            assert i >=0 and i <=4
+        if not i >=0 or not i <=4:
+            error("score out of range")
         total = total + i
      
-    test 'score out of range':
-        assert total >=0 and total <=20
-        
+    if not total >=0 or not total <=20:
+        error("score out of range")
     if total <=9:
         return  "F"
     elif total <=11:
@@ -74,14 +87,19 @@ def implementation_grade(homework_scores: VecC[int?]) -> track_grade?:
         return "A"
 
 test 'first implementation_grade test; you will need to add more':
-    assert implementation_grade([0,0,0,0,0]) == 'F'
-    assert implementation_grade([4,4,2,4,4]) == 'B'
+    assert_error implementation_grade([0,5,0]), "incorrect number of assignments"
+    assert_error implementation_grade([5, -1, 0, 0, 0]), "score out of range"
+    
+    assert implementation_grade([4,4,4,4,4]) == "A"
+    assert implementation_grade([4,4,4,4,3]) == "B" and implementation_grade([4,4,4,4,0]) == "B"
+    assert implementation_grade([4,4,4,0,0]) == "C" and implementation_grade([4,4,4,3,0]) == "C"
+    assert implementation_grade([4,4,2,0,0]) == "D" and implementation_grade([4,4,3,0,0]) == "D"
+    assert implementation_grade([0,0,0,0,0]) == "F" and implementation_grade([4,4,1,0,0]) == "F"
 
 def exams_theory_points(exam1_score: num?, exam2_score: num?) -> int?:
     let total = 0
-    test 'score out of range':
-        assert exam1_score >=0 and exam1_score <=1
-        assert exam2_score >=0 and exam2_score <=1
+    if not (exam1_score >=0 and exam1_score <=1) or not (exam2_score >=0 and exam2_score <=1):
+        error("score out of range")
     for i in [exam1_score, exam2_score]:
         if i <0.35:
             total = total+0
@@ -89,14 +107,24 @@ def exams_theory_points(exam1_score: num?, exam2_score: num?) -> int?:
             total = total+1
         elif i <0.7:
             total = total+2
-        elif i <=0.85:
+        elif i <0.85:
             total = total+3
         else:
             total = total+4
     return total
 
 test 'first exams_theory_points test; you will need to add more':
-    assert exams_theory_points(0.65, 0.86) == 6
+    assert_error exams_theory_points(0.0, 1.1), "score out of range"
+    
+    assert exams_theory_points(0.85, 1) == 8
+    assert exams_theory_points(0.7, 0.85) == 7
+    assert exams_theory_points(0.7, 0.84) == 6
+    assert exams_theory_points(0.55, 0.7) == 5
+    assert exams_theory_points(0.55, 0.69) == 4
+    assert exams_theory_points(0.35,0.55) == 3
+    assert exams_theory_points(0.35, 0.54) == 2
+    assert exams_theory_points(0, 0.35) == 1
+    assert exams_theory_points(0, 0.34) == 0
 
 def theory_grade(theory_points: int?) -> track_grade?:
     if theory_points == 13: return 'A'
@@ -108,48 +136,67 @@ def theory_grade(theory_points: int?) -> track_grade?:
 def tally_design_points(assignments: VecC[AnyC],
                         expected_n_assignments: int?,
                         counts?: FunC[AnyC, bool?]) -> int?:
+    if expected_n_assignments != len(assignments):
+        error("incorrect number of assignments")
     let total = 0
     for assignment in assignments:
         if counts?(assignment):
            total = total +1
-    test 'incorrect number of assignments':
-        assert expected_n_assignments == len(assignments)
     return total
-    
-    
-    
+
+##NEEDS TESTS
+
 def self_evals_design_points(self_eval_scores: VecC[num?]) -> int?:
-    test 'incorrect number of assignments':
-        assert 5 == len(self_eval_scores)
+    if not 5 == len(self_eval_scores):
+        error("incorrect number of assignments")
     let total = 0
     for score in self_eval_scores:
         if score >= 0.5:
             total = total +1
     return total
+   
+test 'self_evals_design_points testing':
+    assert_error self_evals_design_points([0,0,0,0,0,0]), "incorrect number of assignments"
+    
+    assert self_evals_design_points([0,0,0,0,-1]) == 0
+    assert self_evals_design_points([0,0,0,0,0.5]) == 1
+    assert self_evals_design_points([0,-1,10,1,0.5]) == 3
 
 def mutation_testing_design_points(mutation_scores: VecC[num?]) -> int?:
-    test 'incorrect number of assignments':
-        assert 4 == len(mutation_scores)
+    if not 4 == len(mutation_scores):
+        error("incorrect number of assignments")
     let total = 0
     for score in mutation_scores:
         if score >= 0.5:
             total = total +1
     return total
 
+test 'mutation_testing_design_points testing':
+    assert_error mutation_testing_design_points([0,0,0,0,0,0]), "incorrect number of assignments"
+    
+    assert mutation_testing_design_points([0,0,0,-1]) == 0
+    assert mutation_testing_design_points([0,0,0,0.5]) == 1
+    assert mutation_testing_design_points([-1,10,1,0.5]) == 3
+    assert mutation_testing_design_points([0.3, 0.6, 0.8, 1.0]) == 3
+
 def design_docs_design_points(design_docs_scores: VecC[bool?]) -> int?:
-    test 'incorrect number of assignments':
-        assert 3 == len(design_docs_scores)
+    if not 3 == len(design_docs_scores):
+        error("incorrect number of assignments")
     let total = 0
     for score in design_docs_scores:
         if score:
             total = total + 1
     return total
 
+test "design_docs_design_points":
+    assert_error design_docs_design_points([]), "incorrect number of assignments"
+    
+    assert design_docs_design_points([False, False, False]) == 0
+    assert design_docs_design_points([True, True, True]) == 3
+
 def interviews_design_points(interviews_scores: VecC[bool?]) -> int?:
     return design_docs_design_points(interviews_scores)
-        
-test 'first mutation_testing_design_points test; you will need to add more':
-    assert mutation_testing_design_points([0.3, 0.6, 0.8, 1.0]) == 3
+    
 
 def design_grade(design_points: int?) -> track_grade?:
     if design_points >= 14: return 'A'
@@ -222,19 +269,24 @@ class Student:
         self.exam_scores = exam_scores
 
     def get_homework_grades(self) -> VecC[int?]:
-        
+        let return_vec = [None;len(self.homeworks)]
+        for ind in range(len(self.homeworks)):
+            let hw = self.homeworks[ind]
+            return_vec[ind] = hw.n_passed_test_suites
+        return return_vec
 
     def get_project_grade(self) -> int?:
-        pass
-        #   ^ WRITE CODE HERE
+        return self.project.n_passed_test_suites
 
     def resubmit_homework (self, n: int?, new_grade: int?) -> NoneC:
-        pass
-        #   ^ WRITE CODE HERE
+        if not (n>0 and n < 6):
+            error("no such homework")
+        if new_grade > self.homeworks[n-1].n_passed_test_suites:
+            self.homeworks[n-1].n_passed_test_suites = new_grade
 
     def resubmit_project (self, new_grade: int?) -> NoneC:
-        pass
-        #   ^ WRITE CODE HERE
+        if new_grade > self.project.n_passed_test_suites:
+            self.project.n_passed_test_suites = new_grade
 
     # Determine a student's final letter grade from their body of work in the
     # class (i.e., the fields) using the helper functions you wrote earlier.
@@ -269,8 +321,9 @@ class Student:
 ###
 ### Another paltry couple tests
 ###
-     
 
+
+    
 test 'Student#letter_grade, worst case scenario':
     let s = Student('Everyone, right now',
                     [homework(0, 0.0, None),
@@ -283,6 +336,8 @@ test 'Student#letter_grade, worst case scenario':
                     [0.0, 0.0, 0.0, 0.0, 0.0],
                     [0.0, 0.0])
     assert s.letter_grade() == 'F'
+    
+    
 
 test 'Student#letter_grade, best case scenario':
     let s = Student("You, if you work harder than you've ever worked",
@@ -296,3 +351,27 @@ test 'Student#letter_grade, best case scenario':
                     [1.0, 1.0, 1.0, 1.0, 1.0],
                     [1.0, 1.0])
     assert s.letter_grade() == 'A'
+
+test 'testing student functions':
+    let s = Student('nerd',
+                    [homework(3, 0.8, None),
+                     homework(2, 0.6, 1.0),
+                     homework(1, 0.2, 1.0),
+                     homework(4, 0.2, 1.0),
+                     homework(4, 0.6, 1.0)],
+                    [False, False, False],
+                    project(3, [False, False, False]),
+                    [0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0])
+    assert s.get_homework_grades() == [3, 2, 1, 4, 4]
+    assert s.get_project_grade() == 3
+    s.resubmit_homework(1, 4)
+    assert_error s.resubmit_homework(0, 4), "no such homework"
+    assert s.get_homework_grades() == [4, 2, 1, 4, 4]
+    s.resubmit_homework(1, 2)
+    assert s.get_homework_grades() == [4, 2, 1, 4, 4]
+    s.resubmit_project(1)
+    assert s.get_project_grade() == 3
+    s.resubmit_project(6)
+    assert s.get_project_grade() == 6
+    assert s.letter_grade() == "D+"
