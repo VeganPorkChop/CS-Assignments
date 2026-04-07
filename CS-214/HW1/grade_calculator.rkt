@@ -10,7 +10,7 @@ let eight_principles = ["Know your rights.",
     "Always tell the truth when discussing your work with your instructor."]
 
 # HW1: Grade Calculator
-
+    
 ###
 ### Data Definitions
 ###
@@ -35,6 +35,19 @@ def linear_search (elements: VecC[AnyC], target):
 def track_grade?  (str): return linear_search(track_grades,  str)
 def letter_grade? (str): return linear_search(letter_grades, str)
 
+def loop_count(vec: VecC[AnyC], f: FunC[AnyC, bool?]) -> int?:
+    let count = 0
+    for b in vec:
+        if f(b): 
+            count = count + 1
+    return count
+
+def score_to_letter(lst: VecC[int?], score: int?) -> track_grade?:
+    for i in range(0, len(lst), 1):
+        if score >= lst[i]:
+            return track_grades[4-i]
+    return track_grades[0]
+
 ###
 ### Tracks
 ###
@@ -42,16 +55,7 @@ def letter_grade? (str): return linear_search(letter_grades, str)
 def integration_grade(project_score: int?) -> track_grade?:
     if not project_score >=0 or not project_score <=6:
         error('score out of range')  
-    if project_score <=1:
-        return  "F"
-    elif project_score <=2:
-        return "D"
-    elif project_score <=3:
-        return "C"
-    elif project_score <=5:
-        return "B"
-    else:
-        return "A"
+    return score_to_letter([6, 4, 3, 2], project_score)
     
 
 test 'first integration_grade test; you will need to add more':
@@ -75,16 +79,7 @@ def implementation_grade(homework_scores: VecC[int?]) -> track_grade?:
      
     if not total >=0 or not total <=20:
         error("score out of range")
-    if total <=9:
-        return  "F"
-    elif total <=11:
-        return "D"
-    elif total <=15:
-        return "C"
-    elif total <=19:
-        return "B"
-    else:
-        return "A"
+    return score_to_letter([20, 16, 12, 10], total)
 
 test 'first implementation_grade test; you will need to add more':
     assert_error implementation_grade([0,5,0]), "incorrect number of assignments"
@@ -127,33 +122,21 @@ test 'first exams_theory_points test; you will need to add more':
     assert exams_theory_points(0, 0.34) == 0
 
 def theory_grade(theory_points: int?) -> track_grade?:
-    if theory_points == 13: return 'A'
-    if theory_points >= 11: return 'B'
-    if theory_points >= 9:  return 'C'
-    if theory_points >= 8:  return 'D'
-    else:                   return 'F'
+    return score_to_letter([13, 11, 9, 8], theory_points)
 
 def tally_design_points(assignments: VecC[AnyC],
                         expected_n_assignments: int?,
                         counts?: FunC[AnyC, bool?]) -> int?:
     if expected_n_assignments != len(assignments):
         error("incorrect number of assignments")
-    let total = 0
-    for assignment in assignments:
-        if counts?(assignment):
-           total = total +1
-    return total
+    return loop_count(assignments, counts?)
 
 ##NEEDS TESTS
 
 def self_evals_design_points(self_eval_scores: VecC[num?]) -> int?:
     if not 5 == len(self_eval_scores):
         error("incorrect number of assignments")
-    let total = 0
-    for score in self_eval_scores:
-        if score >= 0.5:
-            total = total +1
-    return total
+    return loop_count(self_eval_scores, lambda x: x>=0.5)
    
 test 'self_evals_design_points testing':
     assert_error self_evals_design_points([0,0,0,0,0,0]), "incorrect number of assignments"
@@ -165,11 +148,7 @@ test 'self_evals_design_points testing':
 def mutation_testing_design_points(mutation_scores: VecC[num?]) -> int?:
     if not 4 == len(mutation_scores):
         error("incorrect number of assignments")
-    let total = 0
-    for score in mutation_scores:
-        if score >= 0.5:
-            total = total +1
-    return total
+    return loop_count(mutation_scores, lambda x: x>=0.5)
 
 test 'mutation_testing_design_points testing':
     assert_error mutation_testing_design_points([0,0,0,0,0,0]), "incorrect number of assignments"
@@ -182,11 +161,7 @@ test 'mutation_testing_design_points testing':
 def design_docs_design_points(design_docs_scores: VecC[bool?]) -> int?:
     if not 3 == len(design_docs_scores):
         error("incorrect number of assignments")
-    let total = 0
-    for score in design_docs_scores:
-        if score:
-            total = total + 1
-    return total
+    return loop_count(design_docs_scores, lambda x: x==True)
 
 test "design_docs_design_points":
     assert_error design_docs_design_points([]), "incorrect number of assignments"
@@ -199,11 +174,7 @@ def interviews_design_points(interviews_scores: VecC[bool?]) -> int?:
     
 
 def design_grade(design_points: int?) -> track_grade?:
-    if design_points >= 14: return 'A'
-    if design_points >= 12: return 'B'
-    if design_points >= 10: return 'C'
-    if design_points >= 8:  return 'D'
-    else:                   return 'F'
+    return score_to_letter([14, 12, 10, 8], design_points)
 
 ###
 ### Final Grades
@@ -236,6 +207,9 @@ def n_above_expectations (tracks: TracksC) -> int?:
     for track in tracks:
         if grade_lt(lowest, track):
             total = total + 1
+    #let total2 = loop_count(tracks, lambda x, y: grade_lt(x,y))
+    #assert total2 == total
+    #couldn't figure this out, will be asking about it in office hours
     return total
             
 
@@ -244,7 +218,7 @@ def final_grade (base_grade: track_grade?,
     let ind = index_of(base_grade,letter_grades)
     ind = ind+ n_above_expectations
     if ind > 10:
-        ind = 9
+        ind = 10
     return letter_grades[ind]
 
 ###
