@@ -58,7 +58,7 @@ def integration_grade(project_score: int?) -> track_grade?:
     return score_to_letter([6, 4, 3, 2], project_score)
     
 
-test 'first integration_grade test; you will need to add more':
+test 'first integration_grade test':
     assert_error integration_grade(7), "score out of range"
     assert_error integration_grade(6.1), "contract violation"
     assert integration_grade(6) == 'A'
@@ -81,7 +81,7 @@ def implementation_grade(homework_scores: VecC[int?]) -> track_grade?:
         error("score out of range")
     return score_to_letter([20, 16, 12, 10], total)
 
-test 'first implementation_grade test; you will need to add more':
+test 'first implementation_grade test':
     assert_error implementation_grade([0,5,0]), "incorrect number of assignments"
     assert_error implementation_grade([5, -1, 0, 0, 0]), "score out of range"
     
@@ -108,7 +108,7 @@ def exams_theory_points(exam1_score: num?, exam2_score: num?) -> int?:
             total = total+4
     return total
 
-test 'first exams_theory_points test; you will need to add more':
+test 'first exams_theory_points test':
     assert_error exams_theory_points(0.0, 1.1), "score out of range"
     
     assert exams_theory_points(0.85, 1) == 8
@@ -193,7 +193,7 @@ def grade_lt (g1: letter_grade?, g2: letter_grade?) -> bool?:
 
 let TracksC = VecKC[track_grade?, track_grade?, track_grade?, track_grade?]
 
-def base_grade (tracks: TracksC) -> letter_grade?:
+def base_grade (tracks: TracksC) -> track_grade?:
     let cur_lowest = tracks[0]
     for track in tracks:
         if grade_lt(track, cur_lowest):
@@ -207,9 +207,6 @@ def n_above_expectations (tracks: TracksC) -> int?:
     for track in tracks:
         if grade_lt(lowest, track):
             total = total + 1
-    #let total2 = loop_count(tracks, lambda x, y: grade_lt(x,y))
-    #assert total2 == total
-    #couldn't figure this out, will be asking about it in office hours
     return total
             
 
