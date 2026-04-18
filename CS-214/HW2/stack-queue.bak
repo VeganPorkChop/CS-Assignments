@@ -1,0 +1,123 @@
+#lang dssl2
+
+# HW2: Stacks and Queues
+
+import ring_buffer
+
+interface STACK[T]:
+    def push(self, element: T) -> NoneC
+    def pop(self) -> T
+    def empty?(self) -> bool?
+
+# Defined in the `ring_buffer` library; copied here for reference.
+# Do not uncomment! or you'll get errors.
+# interface QUEUE[T]:
+#     def enqueue(self, element: T) -> NoneC
+#     def dequeue(self) -> T
+#     def empty?(self) -> bool?
+
+# Linked-list node struct (implementation detail):
+struct _cons:
+    let data
+    let next: OrC(_cons?, NoneC)
+
+###
+### ListStack
+###
+
+class ListStack[T] (STACK):
+
+    # Any fields you may need can go here.
+    let header: OrC(_cons?, NoneC)
+
+    # Constructs an empty ListStack
+    def __init__ (self):
+        self.header = None
+    #   ^ WRITE CODE HERE
+    def push(self, element: T) -> NoneC:
+        self.header = _cons(element, self.header)
+    # Other methods you may need can go here.
+    def pop(self) -> T:
+        if self.header == None:
+            error("you cannot pop an empty stack")
+        let return_val = self.header.data
+        self.header = self.header.next
+        return return_val
+
+    def empty?(self) -> bool?:
+        return self.header == None
+
+test "ListStack Tests":
+    #basic functionality
+    let s = ListStack()
+    assert s.empty? == True
+    s.push(2)
+    assert s.empty? == False
+    assert s.pop() == 2
+    assert s.empty? == True
+    #errors
+    assert_error s.pop(), "you cannot pop an empty stack"
+    #niche cases
+
+###
+### ListQueue
+###
+
+class ListQueue[T] (QUEUE):
+
+    # Any fields you may need can go here.
+    let header: OrC(_cons?, NoneC)
+    let tail: OrC(_cons?, NoneC)
+    let length: int?
+    # Constructs an empty ListQueue.
+    def __init__ (self):
+        self.header = None
+        self.tail = None
+        self.length = 0
+    #   ^ WRITE CODE HERE
+    def enqueue(self, element: T) -> NoneC:
+        let new_el = _cons(element, None)
+        if self.length != 0:
+            self.tail.next = new_el
+        else:
+            self.header = new_el
+        self.tail = new_el
+        self.length = self.length + 1
+    def dequeue(self) -> T:
+        if self.length == 0:
+            error("you cannot dequeue on an empty Queue")
+        let return_val = self.header
+        self.header = self.header.next
+        self.length = self.length - 1
+        return return_val.data
+
+    def empty?(self) -> bool?:
+        return self.length == 0
+    # Other methods you may need can go here.
+
+test "woefully insufficient, part 2":
+    let q = ListQueue()
+    q.enqueue(2)
+    assert q.dequeue() == 2
+
+###
+### Playlists
+###
+
+struct song:
+    let title: str?
+    let artist: str?
+    let album: str?
+
+# Enqueue five songs of your choice to the given queue, then return the first
+# song that should play.
+def fill_playlist (q: QUEUE!):
+    pass
+#   ^ WRITE CODE HERE
+
+test "ListQueue playlist":
+    pass
+
+# To construct a RingBuffer: RingBuffer(capacity)
+test "RingBuffer playlist":
+    pass

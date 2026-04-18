@@ -212,11 +212,13 @@ def n_above_expectations (tracks: TracksC) -> int?:
 
 def final_grade (base_grade: track_grade?,
                  n_above_expectations: int?) -> letter_grade?:
+    if base_grade == letter_grades[0]:
+        return letter_grades[0]
     let ind = index_of(base_grade,letter_grades)
     ind = ind+ n_above_expectations
     if ind > 10:
         ind = 10
-    return letter_grades[ind]
+    return 'D' if ind == 2 else letter_grades[ind]
 
 ###
 ### Students
@@ -345,4 +347,35 @@ test 'testing student functions':
     assert s.get_project_grade() == 3
     s.resubmit_project(6)
     assert s.get_project_grade() == 6
-    assert s.letter_grade() == "D+"
+    assert s.letter_grade() == "F"
+
+test 'running advanced grades tests errors 1':
+    assert final_grade('F', 0) == 'F'
+    assert final_grade('F', 1) == 'F' 
+    assert final_grade('F', 2) == 'F'   
+    assert final_grade('F', 3) == 'F'   
+
+test 'running advanced grades tests errors 2':
+    assert final_grade('D', 0) == 'D'
+    assert final_grade('D', 1) == 'D'   
+
+test 'running advanced grades tests errors 3':
+    assert final_grade('C', 0) == 'C'  
+    assert final_grade('C', 1) == 'C+'
+
+test 'running advanced grades tests errors 4':
+    assert final_grade('B', 0) == 'B' 
+    assert final_grade('B', 1) == 'B+'
+
+test 'running advanced grades tests errors 5':
+    assert final_grade('A', 0) == 'A'
+    assert final_grade('A', 3) == 'A'
+
+test 'This should catch all of the things i think were the problem':
+    assert final_grade('D', 1) == 'D'
+    #This is for the D upgrading
+    assert final_grade('D', 0) == 'D'
+    assert final_grade('D', 2) == 'C-'
+    assert final_grade('D', 3) == 'C'
+    #one more for F
+    assert final_grade('F', 1000) == 'F'
