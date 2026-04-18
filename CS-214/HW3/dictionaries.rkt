@@ -41,62 +41,122 @@ class AssociationList[K, V] (DICT):
     def __print__(self, print):
         print("#<object:AssociationList head=%p>", self._head)
 
-    def _looper(self, x:FunC):
+    def _find(self, key: K):
         let item = self._head
         while item:
             if item.key == key:
-                return True
+                return item
             item = item.next
+        return None
 
-    # Other methods you may need can go here.
     def len(self) -> int?:
         return self._len
 
     def mem?(self, key: K) -> bool?:
-        if self._head == None:
-            return False
-        let item = self._head
-        while item:
-            if item.key == key:
-                return True
-            item = item.next
-        return False
+        return self._find(key) != None
 
     def get(self, key: K) -> V:
-        if not self.mem?(key):
+        let node = self._find(key)
+        if node == None:
             error("key not found")
-        let item = self._head
-        while item:
-            if item.key == key:
-                return item.data
-            item = item.next
+        return node.data
     
     def put(self, key: K, val: V) -> NoneC:
-        let item = self._head
-        while item:
-            if item.key == key:
-                item.data = val
-            item = item.next
-        item.next = _node(key, val, None)
+        let node = self._find(key)
+        if node != None:
+            node.data = val
+            return
+        self._head = _node(key, val, self._head)
+        self._len = self._len + 1
 
     def del(self, key: K) -> NoneC:
         let item = self._head
         let prev = None
         while item:
-            item = item.next
             if item.key == key:
-                prev.next = item.next
-                break
+                if prev == None:
+                    self._head = item.next
+                else:
+                    prev.next = item.next
+                self._len = self._len - 1
+                return
             prev = item
-        
+            item = item.next
+        error("cant delete an empty list")
 
-test 'yOu nEeD MorE tEsTs':
+
+test 'I DONT need more tests':
     let a = AssociationList()
     assert not a.mem?('hello')
     a.put('hello', 5)
     assert a.len() == 1
     assert a.mem?('hello')
     assert a.get('hello') == 5
+
+test "testing bounds":
+    let a = AssociationList()
+    assert a.len() == 0
+    assert_error a.del("nothing"), "cant delete an empty list"
+    assert a.len() == 0
+    a.put("key", "val")
+    assert a.len() == 1
+    a.del("key")
+    assert a.len() == 0
+    a.put("key", "val")
+    a.put("key", "val_replace")
+    assert a.len() == 1
+    assert a.get("key") == "val_replace"
+
+test "get error":
+    let a = AssociationList()
+    assert_error a.get("nuthin"), "key not found"
+    a.put("x", 1)
+    assert_error a.get("nuthin"), "key not found"
+
+test "mem? after del":
+    let a = AssociationList()
+    a.put("a", 1)
+    assert a.mem?("a")
+    a.del("a")
+    assert not a.mem?("a")
+    assert a.len() == 0
+
+test "lots o' keys":
+    let a = AssociationList()
+    a.put("a", 1)
+    a.put("b", 2)
+    a.put("c", 3)
+    assert a.len() == 3
+    assert a.mem?("a")
+    assert a.mem?("b")
+    assert a.mem?("c")
+    assert a.get("a") == 1
+    assert a.get("b") == 2
+    assert a.get("c") == 3
+
+test "del middle and del the whole thing":
+    let a = AssociationList()
+    a.put("a", 1)
+    a.put("b", 2)
+    a.put("c", 3)
+    a.del("b")
+    assert a.len() == 2
+    assert not a.mem?("b")
+    assert a.mem?("a")
+    assert a.mem?("c")
+    a.del("a")
+    assert a.len() == 1
+    assert not a.mem?("a")
+    assert a.mem?("c")
+
+test "put replace keeps last key":
+    let a = AssociationList()
+    a.put("a", 1)
+    a.put("b", 2)
+    a.put("a", 99)
+    assert a.len() == 2
+    assert a.get("a") == 99
+    assert a.get("b") == 2
 
 
 class HashTable[K, V] (DICT):
