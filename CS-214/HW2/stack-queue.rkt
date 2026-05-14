@@ -147,7 +147,7 @@ struct song:
 
 # Enqueue five songs of your choice to the given queue, then return the first
 # song that should play.
-def fill_playlist (q: QUEUE!):
+def fill_playlist (q):
     if not q.empty?():
         error("non-empty queue")
     let lst =   [song("Binary Sunset","The Data Structures","Array of Hope"),
