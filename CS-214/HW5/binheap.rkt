@@ -1,5 +1,14 @@
 #lang dssl2
 
+let eight_principles = ["Know your rights.",
+    "Acknowledge your sources.",
+    "Protect your work.",
+    "Avoid suspicion.",
+    "Do your own work.",
+    "Never falsify a record or permit another person to do so.",
+    "Never fabricate data, citations, or experimental results.",
+    "Always tell the truth when discussing your work with your instructor."]
+
 # HW5: Binary Heap
 
 interface PRIORITY_QUEUE[X]:
@@ -30,6 +39,27 @@ class BinHeap[X] (PRIORITY_QUEUE):
         self._data[x] = self._data[y]
         self._data[y] = temp
 
+    def _sift_up(self, i) -> NoneC:
+        while i > 0:
+            let parent = (i - 1) // 2
+            if self._lt?(self._data[i], self._data[parent]):
+                self._switch(i, parent)
+                i = parent
+            else: break
+
+    def _sift_down(self, i) -> NoneC:
+        while True:
+            let left = 2*i + 1
+            let right = 2*i + 2
+            if left >= self._size: break
+            let smallest = left
+            if right < self._size and self._lt?(self._data[right], self._data[left]):
+                smallest = right
+            if self._lt?(self._data[smallest], self._data[i]):
+                self._switch(i, smallest)
+                i = smallest
+            else: break
+
     def len(self)->nat?:
         return self._size
     
@@ -42,31 +72,17 @@ class BinHeap[X] (PRIORITY_QUEUE):
         self._data[0] = self._data[self._size - 1]
         self._data[self._size - 1] = None
         self._size = self._size - 1
-        let i = 0
-        while True:
-            let left = 2*i + 1
-            let right = 2*i + 2
-            if left >= self._size: break
-            let smallest = left
-            if right < self._size and self._lt?(self._data[right], self._data[left]):
-                smallest = right
-            if self._lt?(self._data[smallest], self._data[i]):
-                self._switch(i, smallest)
-                i = smallest
-            else:
-                break
+        self._sift_down(0)
     
     def insert(self, element: X) -> NoneC:
+        if self._size == len(self._data): error("heap is full")
         self._data[self._size] = element
         let i = self._size
         self._size = self._size + 1
-        while i > 0:
-            let parent = (i - 1) // 2
-            if self._lt?(self._data[i], self._data[parent]):
-                self._switch(i, parent)
-                i = parent
-            else:
-                break
+        self._sift_up(i)
+
+    def get_vector(self) -> VecC[OrC(X, NoneC)]:
+        return self._data
 
 # Other methods you may need can go here.
 
@@ -95,6 +111,16 @@ test 'heap sort descending':
     let v = [3, 6, 0, 2, 1]
     heap_sort(v, λ x, y: x > y)
     assert v == [6, 3, 2, 1, 0]
+
+test 'heap sort ascending':
+    let v = [3, 6, 0, 2, 1]
+    heap_sort(v, λ x, y: x < y)
+    assert v == [0, 1, 2, 3, 6]
+
+test 'heap sort duplicates':
+    let v = [3, 1, 2, 1, 3]
+    heap_sort(v, λ x, y: x < y)
+    assert v == [1, 1, 2, 3, 3]
 
 
 # Sorting colleges
@@ -136,7 +162,7 @@ def is_better?(a: college?, b: college?) -> bool?:
     elif b.name == "Northwestern University":
         return False
     else:
-        return a.salary > b.salary
+        return (a.salary - a.tuition) > (b.salary - b.tuition)
 #   ^ WRITE CODE HERE
 
 # Rank the sample colleges above, in order from "best" to "worst".
@@ -151,7 +177,7 @@ test 'length':
     h.insert(1)
     assert h.len() == 1
     h.insert(2)
-    h.find_min() == 1
+    assert h.find_min() == 1
     assert h.len() == 2
     h.remove_min()
     assert h.len() == 1
@@ -202,4 +228,33 @@ test 'weird comparator':
     assert h.find_min() == "hi"
     h.insert("a")
     assert h.find_min() == "a"
-    
+
+test 'error messages':
+    let h = BinHeap[nat?](2, λ x, y: x < y)
+    assert_error h.find_min(), "heap is empty"
+    assert_error h.remove_min(), "heap is empty"
+    h.insert(1)
+    h.insert(2)
+    assert_error h.insert(3), "heap is full"
+
+test 'get_vector':
+    let h = BinHeap[nat?](5, λ x, y: x < y)
+    assert h.get_vector() == [None, None, None, None, None]
+    h.insert(3)
+    assert h.get_vector() == [3, None, None, None, None]
+    h.insert(1)
+    assert h.get_vector() == [1, 3, None, None, None]
+    h.insert(2)
+    assert h.get_vector() == [1, 3, 2, None, None]
+
+test 'duplicates':
+    let h = BinHeap[nat?](10, λ x, y: x < y)
+    h.insert(2)
+    h.insert(1)
+    h.insert(2)
+    h.insert(3)
+    assert h.find_min() == 1
+    h.remove_min()
+    assert h.find_min() == 2
+    h.remove_min()
+    assert h.find_min() == 2
