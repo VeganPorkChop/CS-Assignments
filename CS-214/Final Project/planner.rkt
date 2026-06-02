@@ -104,7 +104,7 @@ class TripPlanner (TRIP_PLANNER):
     let _posn_to_index
     let _index_to_node
 
-    def _road_len(self, x:pos?, y:pos?):
+    def _road_len(self, x:pos?, y:pos?):# ensures road segments have positive length
         return ((x.lat-y.lat)**2 + (x.lon-y.lon)**2)**(1/2)
 
     def __init__(self, raw_road_segs: VecC[RawSeg?], raw_POIs: VecC[RawPOI?]):
@@ -150,7 +150,7 @@ class TripPlanner (TRIP_PLANNER):
             if node?(el):
                 let looper = el.POILL
                 while looper != None:
-                    if looper.data.cat == dst_cat and not self._contains(return_list, [el.pos.latel.pos.lon]):
+                    if looper.data.cat == dst_cat and not self._contains(return_list, [el.pos.lat,el.pos.lon]):
                         return_list = cons([el.pos.lat, el.pos.lon], return_list)
                     looper = looper.next
         return return_list
@@ -158,6 +158,7 @@ class TripPlanner (TRIP_PLANNER):
       
     def plan_route(self,src_lat:  Lat?,src_lon:  Lon?,dst_name: Name?)->ListC[RawPos?]:
         let return_list = None
+
         def dijkstras(start):
             let dist = [[inf, -1]; self._map.n_vertices()]# infinite distance with the previous node = -1 (bc 0 can be node
             let visited = [None; self._map.n_vertices()]# imoprtant bc we can add a distance to something but not have the fastest path to it. Dijkstras means that every node we "visit" will b e the last time we visit it
@@ -178,20 +179,28 @@ class TripPlanner (TRIP_PLANNER):
                             heap.insert([new_dist,neighbor.data])
                         neighbor = neighbor.next
             return dist
+
+        def _poi_name_at(node, name):
+            let looper = node.POILL
+            while looper != None:
+                if looper.data.name == name:
+                    return True
+                looper = looper.next
+            return False
+
         let start = self._posn_to_index.get(pos(src_lat, src_lon))
         let dist = dijkstras(start)
-        
-        let dst = None
+
+        let dst_index = -1
+        let best_dist = inf
         for i, el in self._index_to_node:
-            if node?(el):
-                let looper = el.POILL
-                while looper != None:
-                    if looper.data.name == dst_name: dst = i
-                    looper = looper.next
-                    
-        if dst == None or dist[dst][0] == inf: return None
-        
-        let temp = dst
+            if node?(el) and _poi_name_at(el, dst_name) and dist[i][0] < best_dist:
+                best_dist = dist[i][0]
+                dst_index = i
+
+        if dst_index == -1 or best_dist == inf: return None
+
+        let temp = dst_index
         while temp != start:
             let el = self._index_to_node[temp].pos
             return_list = cons([el.lat,el.lon], return_list)
@@ -207,11 +216,11 @@ class TripPlanner (TRIP_PLANNER):
            let visited = [None; self._map.n_vertices()]
            dist[start] = 0
            let heap = BinHeap(self._map.n_vertices(), lambda a, b: a[0] < b[0])
-           heap.insert([0, start])
+           heap.insert([0, start])##insert a vector of length to pos and pos
            while heap.len()>0:
                let curr = heap.find_min()
                heap.remove_min()
-               let curr_v = curr[1]
+               let curr_v = curr[1]#current verticy
                if not visited[curr_v]:
                    visited[curr_v] = True
                    let neighbor =self._map.get_adjacent(curr_v)
@@ -225,8 +234,8 @@ class TripPlanner (TRIP_PLANNER):
            
        # Rank all dst_cat by dist   
        let dist = dijkstras(self._posn_to_index.get(pos(src_lat, src_lon)))
-       let heap = BinHeap(self._map.n_vertices(), lambda a, b: a[0] < b[0])
-       for i, el in self._index_to_node:
+       let heap = BinHeap(self._map.n_vertices(), lambda a, b: a[0] < b[0])#ranking based on distance
+       for i, el in self._index_to_node:#goung through everything and ranking based on destination type and length
            if node?(el):
                let looper = el.POILL
                while looper != None: 
@@ -296,3 +305,7 @@ def test_me():
     test 'My second find_nearby test':
         assert my_second_example().find_nearby(0, 0, "food", 1) == \
             cons([0,0, "food", "Grand Inn's Breakfast House"], None)
+            
+    test 'My second plan route test':
+        assert my_second_example().find_nearby(2, 1, "cafe", 1) == \
+            cons([2,0,"cafe", "Morning Brew"], None)
