@@ -1,0 +1,7 @@
+1. Bredth first search expands like basically a spilled liquid thorugh a bunch of tunnels.
+Depth first search expands like a rat thats exploring the tunnels
+Greedy BFS expands like a rat that smells cheese and knows which direction it is in
+A* expands like a dude with a map. NOT GOOGLE MAPS. just a map, and he is unsure which streets have a lot of traffic.
+
+2. A* not only is it generally considered the best search algorithm, it is also the fastest and most efficient overall and consistent overall.This answer is supposed to be a few sentances too, so
+I would like to add that it always finds the best path because the heuristic is consistant, meaning that it only goes down, never up so we will never over estimate a node.

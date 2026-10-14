@@ -99,11 +99,12 @@ def best_first_search(dis_map, time_map, start, end):
     """
     q = queue.PriorityQueue()
     prev = {start: None}
-    q.put((0, start))
+    q.put((0, 0,start))
     visited = []
+    counter = 0
 
     while q:
-        curr = q.get()[1]
+        curr = q.get()[2]
         if curr in visited: 
             continue
         visited.append(curr)
@@ -115,9 +116,10 @@ def best_first_search(dis_map, time_map, start, end):
                 i = prev[i]
             return visited, lst[::-1]
         for next in list(expand(curr, time_map)):
+            counter += 1
             if next not in visited:
                 prev[next] = curr
-                q.put((dis_map[next][end], next))
+                q.put((dis_map[next][end], -counter, next))
     return None
 
 
@@ -156,13 +158,11 @@ def a_star_search(dis_map, time_map, start, end):
     q = queue.PriorityQueue()
     prev = {start: None}
     from_x_to_a = {start: 0}
-    q.put((0, start))
+    q.put((0, 0,start))
     visited = []
 
     while q:
-        curr = q.get()[1]
-        if curr in visited:
-            continue
+        curr = q.get()[2]
         visited.append(curr)
         if curr == end:
             i = end
@@ -181,5 +181,5 @@ def a_star_search(dis_map, time_map, start, end):
                 from_x_to_a[next] = from_x_to_a[curr] + time_map[curr][next]
                 prev[next] = curr
             ##add all of the children to the queue with their total distance from start and distance to end heuristic
-            q.put((from_x_to_a[next] + dis_map[next][end], next))
+            q.put((from_x_to_a[next] + dis_map[next][end], -from_x_to_a[next], next))
     return None
