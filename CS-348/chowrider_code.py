@@ -163,6 +163,8 @@ def a_star_search(dis_map, time_map, start, end):
 
     while q:
         curr = q.get()[2]
+        if curr in visited:
+            continue
         visited.append(curr)
         if curr == end:
             i = end
